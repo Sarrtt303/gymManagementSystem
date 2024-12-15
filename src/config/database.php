@@ -1,21 +1,28 @@
 <?php
 
-class Database
+class Database   //database configuration and connection
 {
-    private $host = "localhost";
-    private $db_name = "gymdb";
-    private $username = "root";
-    private $password = null;
+    private $host = "localhost"; //hostname 
+    private $port = '3307';   //port number as per your settings (default is 3306)
+    private $db_name = "gymdb";  //database name
+    private $username = "root";  //mysql username (change it as per your system)
+    private $password = "prateek@01";    //mysql password (change it as per your system)    
     public $conn;
     public function __construct()
     {
         $this->conn = null;
         try {
-            $conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, username: $this->username, password: $this->password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //this is the db connection instance that will be used to talk to the db
+            $this->conn = new PDO("mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name,  $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             echo "Connected successfully";
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
+    }
+
+    public function getConnection()
+    {
+        return $this->conn;
     }
 }

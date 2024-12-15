@@ -1,2 +1,13 @@
-RewriteEngine On
-RewriteRule . index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /gymManagementSystem/
+
+    # Route all requests to index.php
+    RewriteRule ^users$ index.php [L,QSA]
+    RewriteRule ^memberships$ index.php [L,QSA]
+    RewriteRule ^trainers$ index.php [L,QSA]
+    RewriteRule ^classes$ index.php [L,QSA]
+    RewriteRule ^bookings$ index.php [L,QSA]
+    RewriteRule ^payments$ index.php [L,QSA]
+    RewriteRule ^attendence$ index.php [L,QSA]
+</IfModule>
