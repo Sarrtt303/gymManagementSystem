@@ -1,12 +1,12 @@
 <?php
 
-header("Content-Type: application/json; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8");//This tells the client that the server is responding with JSON data.
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Acess-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
 
 include_once "../src/config/database.php";
-include_once "../src/models/user.model.php";
+include_once "../src/models/user.model.php"; 
 
 $db = new Database;
 $user = new UserSchema($db->conn);
@@ -41,8 +41,8 @@ switch ($path) {
         include_once '../src/controllers/payment.controller.php';
         break;
 
-    case 'api/v1/attendence':
-        include_once '../src/controllers/attendence.controller.php';
+    case 'api/v1/attendance':
+        include_once '../src/controllers/attendance.controller.php';
         break;
 
     default:
