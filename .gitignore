@@ -1,0 +1,44 @@
+# Ignore .env and config.ini files
+.env
+config.ini
+
+# Ignore vendor directory for Composer dependencies (you can exclude this if you commit vendor files)
+vendor/
+
+# Ignore node_modules directory if using Node.js packages
+node_modules/
+
+# Ignore compiled PHP files
+*.log
+*.cache
+
+# Ignore IDE or Editor files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore composer.lock or npm lock file (optional, include these if you want strict versioning)
+composer.lock
+package-lock.json
+
+# Ignore temporary files and backups
+*.bak
+*.swp
+*.tmp
+*.log
+
+# Ignore uploaded files and cache directories
+uploads/
+cache/
+tmp/
+storage/
+
+# Ignore environment-specific files
+.env.local
+.env.production
+.env.testing
