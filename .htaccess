@@ -2,12 +2,9 @@
     RewriteEngine On
     RewriteBase /gymManagementSystem/
 
-    # Route all requests to index.php
-    RewriteRule ^users$ index.php [L,QSA]
-    RewriteRule ^memberships$ index.php [L,QSA]
-    RewriteRule ^trainers$ index.php [L,QSA]
-    RewriteRule ^classes$ index.php [L,QSA]
-    RewriteRule ^bookings$ index.php [L,QSA]
-    RewriteRule ^payments$ index.php [L,QSA]
-    RewriteRule ^attendence$ index.php [L,QSA]
+    # Route all requests to src/index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ src/index.php [L,QSA]
 </IfModule>
+

@@ -67,11 +67,11 @@ class UserSchema
     public function read($id)  //reads an entry with matching id
     {
         try {
-            $query = "SELECT * FROM users WHERE id = :id";
+            $query = "SELECT name, email, role, phone FROM users WHERE id = :id";
 
             $stmt = $this->db->prepare($query);
 
-            $stmt->bindParam("", $id);
+            $stmt->bindParam(":id", $id);
 
             $stmt->execute();
 
@@ -89,9 +89,9 @@ class UserSchema
             $stmt = $this->db->prepare($query);
 
             $stmt->bindParam(":id", $id);
-            $stmt->bindParam(":name", $data->name);
-            $stmt->bindParam(":email", $data->email);
-            $stmt->bindParam(":phone", $data->phone);
+            $stmt->bindParam(":name", $data['name']);
+            $stmt->bindParam(":email", $data['email']);
+            $stmt->bindParam(":phone", $data['phone']);
 
             return $stmt->execute();
         } catch (PDOException $th) {
@@ -114,7 +114,7 @@ class UserSchema
         }
     }
 
-    public function updatePassword($id, $password) //updates password field in the entry with the matching id
+    public function updatePassword($id, $data) //updates password field in the entry with the matching id
     {
         try {
             $query = "UPDATE users SET password = :password WHERE id = :id";
@@ -122,7 +122,7 @@ class UserSchema
             $stmt = $this->db->prepare($query);
 
             $stmt->bindParam(":id", $id);
-            $stmt->bindParam(":password", $password);
+            $stmt->bindParam(":password", $data['password']);
 
             return $stmt->execute();
         } catch (PDOException $th) {
@@ -130,7 +130,7 @@ class UserSchema
         }
     }
 
-    public function updateRole($id, $role) //updates role in the entry with matching id
+    public function updateRole($id, $data) //updates role in the entry with matching id
     {
         try {
             $query = "UPDATE users SET role = :role WHERE id = :id";
@@ -138,7 +138,7 @@ class UserSchema
             $stmt = $this->db->prepare($query);
 
             $stmt->bindParam(":id", $id);
-            $stmt->bindParam(":role", $role);
+            $stmt->bindParam(":role", $data['role']);
 
             return $stmt->execute();
         } catch (PDOException $th) {
