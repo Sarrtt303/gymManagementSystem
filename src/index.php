@@ -3,22 +3,24 @@
 header("Content-Type: application/json; charset=UTF-8");//This tells the client that the server is responding with JSON data.
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Acess-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
 
-include_once "../src/config/database.php";
-include_once "../src/models/user.model.php"; 
+include_once __DIR__ . "./config/database.php";
+
 
 $db = new Database;
-$user = new UserSchema($db->conn);
-$user->createUserTable();
+$conn = $db->getConnection();
 
-$request_uri = explode("?", $_SERVER["REQUEST_URI"], 2);
-$path = trim($request_uri[0], "/");
-$query_string = $request_uri[1] ?? "";
+$request_method = $_SERVER['REQUEST_METHOD'];
+$request_uri = explode("?", $_SERVER["REQUEST_URI"], 2); //converts the request uri into an array with two elements 
+$path = trim(str_replace('gymManagementSystem/api/v1', '', $request_uri[0]), '/');  //first element, which is the path of the uri
+$query_string = $request_uri[1] ?? ""; //second element, the query string
 
 switch ($path) {
-    case 'api/v1/users':
-        include_once '../src/controllers/user.controller.php';
+    case 'users':
+        include_once __DIR__ . '/src/controllers/user.controller.php';
+        $user = new User($conn);
+        $user->handleRequest($request_method);
         break;
 
     case 'api/v1/memberships':
@@ -41,11 +43,28 @@ switch ($path) {
         include_once '../src/controllers/payment.controller.php';
         break;
 
-    case 'api/v1/attendance':
-        include_once '../src/controllers/attendance.controller.php';
-        break;
+    case 'attendance':
+       // Attendance endpoint
+       include_once __DIR__ . "/controllers/attendance.controller.php";
+        
+       // Initialize the AttendanceController (ensure the class exists in the included file)
+       try {
+           $attendanceController = new AttendanceController($conn);
+           $response = $attendanceController->handleRequest($request_method);
+
+           // Send the response
+           http_response_code($response['status'] ?? 200);
+           echo json_encode($response['data'] ?? ["message" => "Request processed successfully."]);
+       } catch (Exception $e) {
+           // Handle unexpected exceptions
+           http_response_code(500);
+           echo json_encode(["message" => "An error occurred: " . $e->getMessage()]);
+       }
+       break;
+
 
     default:
-        header("HTTP/1.0 405 Method Not Allowed");
+        http_response_code(404);
+        echo json_encode(["message" => "Endpoint not found."]);
         break;
 }
