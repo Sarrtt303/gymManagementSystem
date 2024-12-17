@@ -35,4 +35,85 @@ class MembershipSchema
             echo $th->getMessage();
         }
     }
+
+    public function create($data)
+    {
+        try {
+            if ($data) {
+                $query = "INSERT INTO memberships (name, price, duration, description)
+                VALUES (:name, :price, :duration, :description)";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(":name", $data["name"]);
+                $stmt->bindParam(":price", $data["price"]);
+                $stmt->bindParam(":duration", $data["duration"]);
+                $stmt->bindParam(":description", $data["description"]);
+
+                return $stmt->execute();
+            }
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
+
+    public function read($id)
+    {
+        try {
+            if ($id) {
+                $query = "SELECT name, price, duration, description FROM memberships WHERE id = :id";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(":id", $id);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result;
+            }
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
+
+    public function readAll()
+    {
+        try {
+            $query = "SELECT name, price, duration, description FROM memberships";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
+
+    public function update($id, $data)
+    {
+        try {
+            if ($id) {
+                $query = "UPDATE memberships SET name= :name, price = :price, duration=:duration,description=:description WHERE id = :id";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(":name", $data["name"]);
+                $stmt->bindParam(":price", $data["price"]);
+                $stmt->bindParam(":duration", $data["duration"]);
+                $stmt->bindParam(":description", $data["description"]);
+                $stmt->bindParam(":id", $id);
+
+                return $stmt->execute();
+            }
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            if ($id) {
+                $query = "DELETE FROM memberships WHERE id = :id";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(":id", $id);
+                return $stmt->execute();
+            }
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
 }

@@ -26,6 +26,8 @@ switch ($path) {
 
     case 'memberships':
         include_once __DIR__ . '/controllers/membership.controller.php';
+        $membership = new Membership($conn);
+        $membership->handleRequest($request_method);
         break;
 
     case 'trainers':

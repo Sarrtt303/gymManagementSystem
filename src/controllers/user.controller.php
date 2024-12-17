@@ -6,7 +6,6 @@ include_once __DIR__ . "/../models/membership.model.php";
 class User
 {
 
-    private $user;
     private $userSchema;
     private $membershipSchema;
 
@@ -51,7 +50,7 @@ class User
                 break;
 
             default:
-                echo 'request received';
+                header("HTTP/1.0 405 Method Not Allowed");
                 break;
         }
     }
@@ -60,7 +59,7 @@ class User
         try {
             $data = json_decode(file_get_contents("php://input"), true);
             if (!empty($data['name']) && !empty($data['email']) && !empty($data['password']) && !empty($data['role']) && !empty($data['phone'])) {
-                $createdUser = $this->user->create($data);
+                $createdUser = $this->userSchema->create($data);
                 if ($createdUser) {
                     new apiResponse(201, "User registered successfully", $createdUser);
                 } else {
