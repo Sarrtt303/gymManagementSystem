@@ -38,4 +38,6 @@ class TrainerSchema
             echo $th->getMessage();
         }
     }
+
+    //write functions here..
 }

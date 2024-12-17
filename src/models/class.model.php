@@ -37,4 +37,6 @@ class ClassSchema
             echo $th->getMessage();
         }
     }
+
+    //write functions here..
 }

@@ -39,4 +39,6 @@ class PaymentSchema
             echo $th->getMessage();
         }
     }
+
+    //write functions here..
 }

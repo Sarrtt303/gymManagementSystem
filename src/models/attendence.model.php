@@ -37,4 +37,6 @@ class AttendenceSchema
             echo $th->getMessage();
         }
     }
+
+    //write functions here..
 }

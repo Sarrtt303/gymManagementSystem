@@ -32,6 +32,8 @@ switch ($path) {
 
     case 'trainers':
         include_once __DIR__ . '/controllers/trainer.controller.php';
+        $trainer = new Trainer($conn);
+        $trainer->handleRequest($request_method);
         break;
 
     case 'classes':
