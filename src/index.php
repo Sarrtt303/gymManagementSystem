@@ -22,7 +22,7 @@ $query_string = $request_uri[1] ?? ""; //second element, the query string
 
 switch ($path) {
     case 'users':
-        include_once __DIR__ . '/src/controllers/user.controller.php';
+        include_once __DIR__ . '/controllers/user.controller.php';
         $user = new User($conn);
         $user->handleRequest($request_method);
         break;
