@@ -1,45 +1,28 @@
 <?php
 
-class Database
+class Database   //database configuration and connection
 {
-    private $host;
-    private $port;
-    private $user;
-    private $password;
-    private $database;
+    private $host = "localhost"; //hostname 
+    private $port = '8000';   //port number as per your settings (default is 3306)
+    private $db_name = "gymdb";  //database name
+    private $username = "root";  //mysql username (change it as per your system)
+    private $password = "";    //mysql password (change it as per your system)    
     public $conn;
-
-    public function __construct($configFile, $dbKey)
+    public function __construct()
     {
-        $config = parse_ini_file($configFile, true);
-
-        $mysql = $config['mysql'];
-        $databases = $config['databases'];
-
-        $this->host = $mysql['host'];
-        $this->port = $mysql['port'];
-        $this->user = $mysql['user'];
-        $this->password = $mysql['password'];
-
-        if (!isset($databases[$dbKey])) {
-            die("Database key '$dbKey' not found in configuration.");
+        $this->conn = null;
+        try {
+            //this is the db connection instance that will be used to talk to the db
+            $this->conn = new PDO("mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name,  $this->username, $this->password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            echo "Connected successfully";
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
         }
-
-        $this->database = $databases[$dbKey];
-        $this->connect();
     }
 
-    public function connect()
+    public function getConnection()
     {
-        try {
-            $dsn = "mysql:host=$this->host;port=$this->port;dbname=$this->database";
-            $this->conn = new PDO($dsn, $this->user, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Database connected successfully to {$this->database}.\n";
-            return $this->conn;
-        } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine() . "\n";
-            exit; // Stop execution on a fatal error
-        }
+        return $this->conn;
     }
 }

@@ -5,7 +5,11 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
 
-include_once __DIR__ . "./config/database.php";
+// Enable error reporting for development
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+include_once __DIR__ . "/config/database.php";
 
 
 $db = new Database;
@@ -44,27 +48,15 @@ switch ($path) {
         break;
 
     case 'attendance':
-       // Attendance endpoint
-       include_once __DIR__ . "/controllers/attendance.controller.php";
-        
-       // Initialize the AttendanceController (ensure the class exists in the included file)
-       try {
-           $attendanceController = new AttendanceController($conn);
-           $response = $attendanceController->handleRequest($request_method);
-
-           // Send the response
-           http_response_code($response['status'] ?? 200);
-           echo json_encode($response['data'] ?? ["message" => "Request processed successfully."]);
-       } catch (Exception $e) {
-           // Handle unexpected exceptions
-           http_response_code(500);
-           echo json_encode(["message" => "An error occurred: " . $e->getMessage()]);
-       }
-       break;
+        include_once __DIR__ . '/controllers/attendance.controller.php';
+        $attendance = new AttendanceController($conn);
+        $attendance->handleRequest($request_method);
+        break;
 
 
     default:
         http_response_code(404);
         echo json_encode(["message" => "Endpoint not found."]);
+        echo json_encode(["message" => "Backend functional"]);
         break;
 }
