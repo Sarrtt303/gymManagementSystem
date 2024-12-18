@@ -42,6 +42,8 @@ class User
                     $this->updateUserPassword();
                 } elseif (isset($_GET['update-role'])) {
                     $this->updateUserRole();
+                } else if (isset($_GET["add-membership"])) {
+                    $this->addUserMembership();
                 }
                 break;
 
@@ -63,10 +65,10 @@ class User
                 if ($createdUser) {
                     new apiResponse(201, "User registered successfully", $createdUser);
                 } else {
-                    new ApiError(500, "user registeration failed");
+                    throw new ApiError(500, "user registeration failed");
                 }
             } else {
-                new apiError(400, "incomplete data provide");
+                throw new apiError(404, "incomplete data provide");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -82,7 +84,7 @@ class User
                 if ($user) {
                     new ApiResponse(200, "user fetched successfully", $user);
                 } else {
-                    new ApiError(400, "user not found");
+                    throw new ApiError(404, "user not found");
                 }
             } else {
                 echo "user id is required";
@@ -103,7 +105,7 @@ class User
                     if ($updatedUser) {
                         new apiResponse(200, "user details updated successfully", $updatedUser);
                     } else {
-                        new ApiError(400, "user not found");
+                        throw new ApiError(404, "user not found");
                     }
                 } else {
                     echo "user data is required";
@@ -125,10 +127,10 @@ class User
                 if ($user) {
                     new apiResponse(200, "user deleted successfully", $user);
                 } else {
-                    new apiError(400, "user not found");
+                    throw new apiError(404, "user not found");
                 }
             } else {
-                new ApiError(400, "user id is required");
+                throw new ApiError(404, "user id is required");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -146,13 +148,13 @@ class User
                     if ($user) {
                         new apiResponse(200, "user password updated successfully", $user);
                     } else {
-                        new apiError(400, "user not found");
+                        throw new apiError(404, "user not found");
                     }
                 } else {
-                    new apiError(400, "user password is missing");
+                    throw new apiError(404, "user password is missing");
                 }
             } else {
-                new apiError(400, "user id is required");
+                throw new apiError(404, "user id is required");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -170,13 +172,33 @@ class User
                     if ($user) {
                         new apiResponse(200, "user role updated successfully", $user);
                     } else {
-                        new apiError(400, "user not found");
+                        throw new apiError(404, "user not found");
                     }
                 } else {
-                    new apiError(400, "user data is required");
+                    throw new apiError(404, "user data is required");
                 }
             } else {
-                new apiError(400, "user id is required");
+                throw new apiError(404, "user id is required");
+            }
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        }
+    }
+
+    private function addUserMembership()
+    {
+        try {
+            $id = $_GET["id"];
+            $membership_id = $_GET["mid"];
+            if ($id && $membership_id) {
+                $result = $this->userSchema->addMembership($id, $membership_id);
+                if ($result) {
+                    new apiResponse(200, "membership added successfully", $result);
+                } else {
+                    new apiError(404, "user or membership not found");
+                }
+            } else {
+                throw new apiError(404, "user id and membership id is required");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();

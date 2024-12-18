@@ -1,5 +1,5 @@
 <?php
-
+include_once __DIR__ . "/../utils/apiError.php";
 class UserSchema
 {
     private $db;
@@ -143,6 +143,51 @@ class UserSchema
             return $stmt->execute();
         } catch (PDOException $th) {
             echo $th->getMessage();
+        }
+    }
+
+    public function addMembership($id, $membership_id)
+    {
+        try {
+            $query1 = "SELECT duration FROM memberships WHERE id = :mid";
+            $stmt = $this->db->prepare($query1);
+            $stmt->bindParam(":mid", $membership_id);
+            $stmt->execute();
+            $membership = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($membership === false) {
+                throw new Exception("Membership ID not found");
+            }
+
+            $membership_start = new DateTime("now");
+            $membership_end = new DateTime("now");
+
+            if ($membership["duration"] === "Monthly") {
+                $membership_end->add(new DateInterval("P30D"));
+            } elseif ($membership["duration"] === "half-yearly") {
+                $membership_end->add(new DateInterval("P180D"));
+            } elseif ($membership["duration"] === "yearly") {
+                $membership_end->add(new DateInterval("P360D"));
+            } else {
+                throw new Exception("Invalid membership duration");
+            }
+
+            // Store formatted dates in variables
+            $formatted_start = $membership_start->format("Y-m-d");
+            $formatted_end = $membership_end->format("Y-m-d");
+
+            $query2 = "UPDATE users SET membership_id = :mid, membership_start_date = :start, membership_end_date = :end WHERE id = :id";
+            $stmt = $this->db->prepare($query2);
+            $stmt->bindParam(":mid", $membership_id);
+            $stmt->bindParam(":start", $formatted_start);
+            $stmt->bindParam(":end", $formatted_end);
+            $stmt->bindParam(":id", $id);
+
+            return $stmt->execute();
+        } catch (PDOException $th) {
+            echo $th->getMessage();
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 }

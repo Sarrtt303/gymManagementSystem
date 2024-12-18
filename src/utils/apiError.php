@@ -1,6 +1,6 @@
 <?php
 
-class ApiError
+class ApiError extends Exception
 {
     public $code;
     public $message;

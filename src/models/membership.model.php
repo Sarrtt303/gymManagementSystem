@@ -22,7 +22,7 @@ class MembershipSchema
                     id int AUTO_INCREMENT NOT NULL,
                     name VARCHAR(50) NOT NULL UNIQUE,
                     price DECIMAL(20,2) NOT NULL,
-                    duration ENUM('Monthly','Quarterly','Yearly') NOT NULL,
+                    duration ENUM('monthly','half-yearly','yearly') NOT NULL,
                     description VARCHAR(100),
                     PRIMARY KEY (id)
                 )";

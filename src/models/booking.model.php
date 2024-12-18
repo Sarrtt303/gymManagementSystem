@@ -23,7 +23,7 @@ class BookingSchema
                     id int AUTO_INCREMENT NOT NULL,
                     uid int NOT NULL,
                     trainer_id int,
-                    class_id int NOT NULL,
+                    class_id int,
                     booking_date DATE NOT NULL,
                     status ENUM('confirmed', 'canceled')
                     PRIMARY KEY (id),

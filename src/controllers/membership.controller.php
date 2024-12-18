@@ -56,12 +56,12 @@ class Membership
             if (isset($data["name"]) && isset($data["price"]) && isset($data["duration"]) && isset($data["description"])) {
                 $membership = $this->membershipSchema->create($data);
                 if ($membership) {
-                    new ApiResponse("201", "user created successfully", $membership);
+                    new ApiResponse("201", "membership created successfully", $membership);
                 } else {
-                    new ApiError("400", "user already exists");
+                    throw new ApiError("400", "membership already exists");
                 }
             } else {
-                new ApiError("400", "incomplete data provided");
+                throw new ApiError("400", "incomplete data provided");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -77,10 +77,10 @@ class Membership
                 if ($membership) {
                     new ApiResponse("201", "membership fetched successfully", $membership);
                 } else {
-                    new ApiError("400", "membership not found");
+                    throw new ApiError("400", "membership not found");
                 }
             } else {
-                new ApiError("400", "membership id is required");
+                throw new ApiError("400", "membership id is required");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -94,7 +94,7 @@ class Membership
             if ($memberships) {
                 new ApiResponse("201", "memberships fetched successfully", $memberships);
             } else {
-                new ApiError("400", "no memberships exists");
+                throw new ApiError("400", "no memberships exists");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -112,13 +112,13 @@ class Membership
                     if ($membership) {
                         new ApiResponse("201", "membership updated successfully", $membership);
                     } else {
-                        new ApiError("400", "membership not found");
+                        throw new ApiError("400", "membership not found");
                     }
                 } else {
-                    new ApiError("400", "data not found");
+                    throw new ApiError("400", "data not found");
                 }
             } else {
-                new ApiError("400", "membership id is required");
+                throw new ApiError("400", "membership id is required");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
@@ -134,10 +134,10 @@ class Membership
                 if ($membership) {
                     new ApiResponse("20", "membership deleted successfully", $membership);
                 } else {
-                    new ApiError("400", "membership not found");
+                    throw new ApiError("400", "membership not found");
                 }
             } else {
-                new ApiError("400", "membership id is required");
+                throw new ApiError("400", "membership id is required");
             }
         } catch (PDOException $th) {
             echo $th->getMessage();
